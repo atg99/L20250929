@@ -62,7 +62,7 @@ void ProcessInput(FCharacter& Player,int KeyInput)
 	case RIGHT:
 		X++; break;
 	}
-	ProcessMap(Player, Player->X+X, Player.Y+Y);
+	ProcessMap(Player, Player.X+X, Player.Y+Y);
 }
 
 void ProcessEnemyMoving(FCharacter& Enemy)
@@ -110,7 +110,7 @@ void DrawMap()
 	}
 }
 
-void Render(vector<FCharacter*>& Characters)
+void Render(const vector<FCharacter*>& Characters)
 {
 	DrawMap();
 	for (int i = 0; i < Characters.size(); i++)
