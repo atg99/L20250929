@@ -2,6 +2,7 @@
 #include <windows.h>
 #include <conio.h>
 #include <vector>
+#include <random>
 
 using namespace std;
 
@@ -11,30 +12,42 @@ using namespace std;
 #define DOWN 0x50
 #define SPACE 0x20
 
-void GetInput();
+random_device rd;
+mt19937 gen(rd());
+uniform_int_distribution<int> dist(-1, 1);
+
+int GetInput();
+void ProcessInput(int KeyInput);
+void ProcessEnemyMoving();
+void Render();
 
 int PlayerX = 0;
 int PlayerY = 0;
-char PlayerShape = 'p';
+
+int EnemyX = 6;
+int EnemyY = 6;
+
+char Shapes[2] = { 'P','M' };
 int main()
 {
 	while (true)
 	{
-		GetInput();
-		COORD Cur;
-		Cur.X = PlayerX;
-		Cur.Y = PlayerY;
+		ProcessInput(GetInput());
+		ProcessEnemyMoving();
 		system("cls");
-		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), Cur);
-		cout << PlayerShape << endl;
+		Render();
 	}
 
 }
 
-void GetInput()
+int GetInput()
 {
-	int KeyInput = _getch();
+	return _getch();
+}
 
+void ProcessInput(int KeyInput)
+{
+	
 	switch (KeyInput)
 	{
 	default: 	break;
@@ -47,4 +60,27 @@ void GetInput()
 	case RIGHT:
 		PlayerX++; break;
 	}
+}
+
+void ProcessEnemyMoving()
+{
+	EnemyX += dist(gen);
+	EnemyY += dist(gen);
+}
+
+void MoveCusor(int x, int y)
+{
+	COORD Cur;
+	Cur.X = x;
+	Cur.Y = y;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), Cur);
+}
+
+void Render()
+{
+	MoveCusor(PlayerX, PlayerY);
+	cout << Shapes[0] << endl;
+
+	MoveCusor(EnemyX, EnemyY);
+	cout << Shapes[1] << endl;
 }
